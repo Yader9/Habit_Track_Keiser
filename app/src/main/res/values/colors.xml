@@ -12,6 +12,7 @@
     <!-- Tarjetas / contenedores -->
     <color name="cardLight">#FFFFFF</color>
     <color name="cardDark">#1E1E1E</color>
+    <color name="bgcard">#F9FEFF</color>
 
     <!-- Texto -->
     <color name="textPrimaryLight">#212121</color>

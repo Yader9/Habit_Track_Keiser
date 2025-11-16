@@ -2,4 +2,5 @@
 <resources>
 
     <color name="socialIconApple">#FFFFFFFF</color>
+    <color name="bgcard">#333232</color>
 </resources>

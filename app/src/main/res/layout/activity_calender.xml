@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/alayout"
+        android:layout_width="410dp"
+        android:layout_height="85dp"
+        android:layout_marginTop="4dp"
+        app:layout_constrainatEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MotionLayoutInvalidSceneFileReference">
+
+        <ImageButton
+            android:id="@+id/ic_back"
+            android:layout_width="45dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_back" />
+
+        <TextView
+            android:id="@+id/txtactivity"
+            android:layout_width="185dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:text="Caminar 5,000 pasos"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/ic_back"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/ic_edit"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_edit" />
+
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+
+    <LinearLayout
+        android:id="@+id/streakContainer"
+        android:layout_width="370dp"
+        android:layout_height="89dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_card"
+        android:orientation="vertical"
+        android:padding="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/alayout">
+
+
+        <TextView
+            android:id="@+id/streakEmojiCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🔥 Llevas 0 dias"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/streakMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="¡Excelente! Mantente constante."
+            android:textColor="@color/textSecondaryLight"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/streakContainer" />
+
+    <Button
+        android:id="@+id/checkInButton"
+        android:layout_width="221dp"
+        android:layout_height="75dp"
+        android:layout_marginBottom="48dp"
+        android:backgroundTint="#63E3D3"
+        android:drawableLeft="@drawable/ic_check"
+        android:drawablePadding="8dp"
+        android:drawableTint="@color/textPrimaryDark"
+        android:fontFamily="sans-serif-medium"
+        android:text="Check-In Diario"
+        android:textColor="@color/textPrimaryDark"
+        android:textSize="19dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calendarView"
+        app:layout_constraintVertical_bias="1.0" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
