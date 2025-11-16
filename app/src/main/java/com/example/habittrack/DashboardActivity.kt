@@ -1,5 +1,6 @@
 package com.example.habittrack
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -7,7 +8,6 @@ import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
@@ -98,25 +98,28 @@ class DashboardActivity : AppCompatActivity() {
         val checkHabit2 = findViewById<CheckBox>(R.id.checkHabit2)
         val checkHabit3 = findViewById<CheckBox>(R.id.checkHabit3)
 
-        // Streak / descripción central (placeholder para lógica futura)
+        // Títulos y descripciones de racha
         val subtitle1 = findViewById<TextView>(R.id.textHabitSubtitle1)
         val subtitle2 = findViewById<TextView>(R.id.textHabitSubtitle2)
         val subtitle3 = findViewById<TextView>(R.id.textHabitSubtitle3)
 
-        fun setupStreakClick(subtitle: TextView) {
+        val title1 = findViewById<TextView>(R.id.textHabitTitle1)
+        val title2 = findViewById<TextView>(R.id.textHabitTitle2)
+        val title3 = findViewById<TextView>(R.id.textHabitTitle3)
+
+        // Al tocar la racha, abrimos CalendarActivity con los datos del hábito
+        fun setupStreakClick(subtitle: TextView, title: TextView) {
             subtitle.setOnClickListener {
-                // Aquí luego puedes abrir un detalle real de la racha
-                Toast.makeText(
-                    this,
-                    "Aquí podrás ver el detalle de tu racha 😊",
-                    Toast.LENGTH_SHORT
-                ).show()
+                val intent = Intent(this, CalendarActivity::class.java)
+                intent.putExtra("habit_title", title.text.toString())
+                intent.putExtra("habit_streak", subtitle.text.toString())
+                startActivity(intent)
             }
         }
 
-        setupStreakClick(subtitle1)
-        setupStreakClick(subtitle2)
-        setupStreakClick(subtitle3)
+        setupStreakClick(subtitle1, title1)
+        setupStreakClick(subtitle2, title2)
+        setupStreakClick(subtitle3, title3)
 
         // Layout donde se van a mover los archivados
         val layoutArchived = layoutArchivedHabits
@@ -160,5 +163,4 @@ class DashboardActivity : AppCompatActivity() {
         textView.text = "$habitosCompletados de $totalHabitos hábitos completados"
     }
 }
-
 
