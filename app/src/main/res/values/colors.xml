@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Colores principales -->
+    <color name="colorPrimary">#03A9F4</color>
+    <color name="colorPrimaryDark">#0288D1</color>
+    <color name="colorAccent">#00C853</color>
+
+    <!-- Fondos -->
+    <color name="backgroundLight">#F5F5F5</color>
+    <color name="backgroundDark">#121212</color>
+
+    <!-- Tarjetas / contenedores -->
+    <color name="cardLight">#FFFFFF</color>
+    <color name="cardDark">#1E1E1E</color>
+
+    <!-- Texto -->
+    <color name="textPrimaryLight">#212121</color>
+    <color name="textSecondaryLight">#757575</color>
+    <color name="textPrimaryDark">#FFFFFF</color>
+    <color name="textSecondaryDark">#B3B3B3</color>
+
+    <!-- Bordes / separadores -->
+    <color name="dividerLight">#DDDDDD</color>
+    <color name="dividerDark">#333333</color>
+    <color name="socialIconApple">#000000</color>
+</resources>

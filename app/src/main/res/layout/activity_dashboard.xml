@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootDashboard"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="top|center_horizontal"
+    android:background="?android:windowBackground"
+    tools:context=".DashboardActivity">
+
+    <!-- HEADER: botón atrás + logo + título + switch dark mode -->
+    <LinearLayout
+        android:id="@+id/headerDashboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="16dp">
+
+        <!-- Botón de regreso -->
+        <ImageButton
+            android:id="@+id/buttonBack"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:padding="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_revert"
+            android:contentDescription="Regresar" />
+
+        <!-- Logo HabitTrack -->
+        <ImageView
+            android:id="@+id/appIconDashboard"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/habittrack_icon_universal_v2"
+            android:contentDescription="@string/app_name" />
+
+        <!-- Título HabitTrack -->
+        <TextView
+            android:id="@+id/appTitleDashboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/app_name"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="?android:textColorPrimary" />
+
+        <!-- Espaciador -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Switch dark mode (dashboard) -->
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchDarkModeDashboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:thumbTint="@color/colorPrimary"
+            android:trackTint="@color/textSecondaryLight" />
+    </LinearLayout>
+
+    <!-- Texto bienvenida -->
+    <TextView
+        android:id="@+id/textWelcomeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¡Bienvenido de nuevo!"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="?android:textColorPrimary" />
+
+    <TextView
+        android:id="@+id/textWelcomeSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Estos son tus hábitos para hoy:"
+        android:textColor="?android:textColorSecondary" />
+
+    <!-- Tabs ACTIVOS / ARCHIVADOS -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayoutDashboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabTextColor="@color/textSecondaryLight"
+        app:tabSelectedTextColor="@color/colorPrimary"
+        app:tabIndicatorColor="@color/colorPrimary"
+        app:tabIndicatorHeight="4dp"
+        app:tabIndicatorFullWidth="false">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabActiveHabits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Activos" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabArchivedHabits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Archivados" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <!-- CONTENEDOR DE PROGRESO (solo para ACTIVOS) -->
+    <LinearLayout
+        android:id="@+id/progressContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/textProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 de 3 hábitos completados"
+            android:textColor="?android:textColorSecondary"
+            android:layout_marginBottom="4dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBarHabits"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:max="3"
+            android:progress="0"
+            android:progressTint="@color/colorPrimary"
+            android:backgroundTint="@color/textSecondaryLight" />
+    </LinearLayout>
+
+    <!-- LISTA: HÁBITOS ACTIVOS -->
+    <LinearLayout
+        android:id="@+id/layoutActiveHabits"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Hábito 1 -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardHabit1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:id="@+id/contentHabit1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textHabitTitle1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tomar 8 vasos de agua"
+                        android:textStyle="bold"
+                        android:textColor="?android:textColorPrimary" />
+
+                    <TextView
+                        android:id="@+id/textHabitSubtitle1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Racha: 3 días"
+                        android:textColor="?android:textColorSecondary" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/checkHabit1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:clickable="true"
+                    android:buttonTint="@color/colorPrimary"
+                    android:contentDescription="Completar hábito" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Hábito 2 -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardHabit2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:id="@+id/contentHabit2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textHabitTitle2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Leer 15 minutos"
+                        android:textStyle="bold"
+                        android:textColor="?android:textColorPrimary" />
+
+                    <TextView
+                        android:id="@+id/textHabitSubtitle2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Racha: 7 días"
+                        android:textColor="?android:textColorSecondary" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/checkHabit2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:clickable="true"
+                    android:buttonTint="@color/colorPrimary"
+                    android:contentDescription="Completar hábito" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Hábito 3 -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardHabit3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:id="@+id/contentHabit3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textHabitTitle3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Caminar 5,000 pasos"
+                        android:textStyle="bold"
+                        android:textColor="?android:textColorPrimary" />
+
+                    <TextView
+                        android:id="@+id/textHabitSubtitle3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Racha: 2 días"
+                        android:textColor="?android:textColorSecondary" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/checkHabit3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:clickable="true"
+                    android:buttonTint="@color/colorPrimary"
+                    android:contentDescription="Completar hábito" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <!-- LISTA: HÁBITOS ARCHIVADOS -->
+    <LinearLayout
+        android:id="@+id/layoutArchivedHabits"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textNoArchived"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aún no tienes hábitos archivados."
+            android:textColor="?android:textColorSecondary" />
+    </LinearLayout>
+
+    <!-- BOTÓN: Añadir nuevo hábito -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonAddHabit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Agregar nuevo hábito"
+        android:textAllCaps="false"
+        app:cornerRadius="12dp"
+        app:backgroundTint="@color/colorPrimary" />
+
+</LinearLayout>
