@@ -56,7 +56,6 @@ class DashboardActivity : AppCompatActivity() {
         userId = FirebaseAuth.getInstance().currentUser?.uid
 
         // --------- Referencias de vistas ---------
-        val buttonBack = findViewById<View>(R.id.buttonBack)
 
         val tabLayoutDashboard = findViewById<TabLayout>(R.id.tabLayoutDashboard)
         val layoutActiveHabits = findViewById<LinearLayout>(R.id.layoutActiveHabits)
@@ -70,7 +69,9 @@ class DashboardActivity : AppCompatActivity() {
         val buttonAddHabit = findViewById<MaterialButton>(R.id.buttonAddHabit)
 
         // --------- Botón de regreso ---------
-        buttonBack.setOnClickListener { finish() }
+        findViewById<View>(R.id.buttonBack).setOnClickListener {
+            finish()
+        }
 
         // --------- Tabs Activos / Archivados ---------
         layoutActiveHabits.visibility = View.VISIBLE

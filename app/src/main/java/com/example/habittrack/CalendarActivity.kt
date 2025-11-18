@@ -1,13 +1,11 @@
 package com.example.habittrack
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.CalendarView
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.auth.FirebaseAuth
@@ -29,7 +27,7 @@ class CalendarActivity : AppCompatActivity() {
     private var habitTitle: String = "Hábito"
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Aplicar dark mode guardado ANTES de inflar la vista
+        // Tema (dark / light)
         val prefs = getSharedPreferences("settings", MODE_PRIVATE)
         val darkModeOn = prefs.getBoolean("dark_mode", false)
         AppCompatDelegate.setDefaultNightMode(
@@ -44,7 +42,7 @@ class CalendarActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         userId = FirebaseAuth.getInstance().currentUser?.uid
 
-        // Datos que nos manda el Dashboard
+        // Datos que vienen del Dashboard
         habitTitle = intent.getStringExtra("habit_title") ?: "Hábito"
         habitIndex = intent.getIntExtra("habit_index", -1)
         currentStreakDays = intent.getIntExtra("habit_streak_days", 0)
@@ -69,38 +67,28 @@ class CalendarActivity : AppCompatActivity() {
                 "Toca un día y presiona \"Registrar check-in\" para empezar tu racha."
         }
 
-        // 🔙 Botón atrás de la UI
+        // 🔙 Botón atrás: simplemente cerrar CalendarActivity
+        // Esto devuelve a la Activity anterior en la pila (DashboardActivity)
         buttonBack.setOnClickListener {
-            navigateBackToDashboard()
+            finish()
         }
 
-        // 🔙 Gesto / botón físico de atrás del sistema
-        onBackPressedDispatcher.addCallback(
-            this,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    navigateBackToDashboard()
-                }
-            }
-        )
-
-        // Botón de check-in
+        // ✅ Botón de check-in: registra la racha en Firestore
         checkInButton.setOnClickListener {
             val selectedDate = calendarView.date
             val format = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale("es"))
             val dateText = format.format(Date(selectedDate))
 
-            // 1) Feedback inmediato al usuario
+            // Feedback inmediato
             Toast.makeText(
                 this,
                 "Check-in registrado para $dateText",
                 Toast.LENGTH_SHORT
             ).show()
 
-            // 2) Actualizar racha en Firestore
+            // Actualizar racha en Firestore
             updateStreakInFirestore(
                 onUpdated = { newStreak ->
-                    // Actualizar UI con la nueva racha
                     currentStreakDays = newStreak
                     streakEmojiCount.text = "🔥 Racha: $currentStreakDays días"
                     streakMessage.text =
@@ -118,20 +106,6 @@ class CalendarActivity : AppCompatActivity() {
     }
 
     /**
-     * Navegar de vuelta al Dashboard, tanto si está en la pila como si hay que recrearlo.
-     */
-    private fun navigateBackToDashboard() {
-        val intent = Intent(this, DashboardActivity::class.java).apply {
-            // Si Dashboard ya está en la pila, lo trae al frente
-            // y limpia cualquier Activity por encima (como este CalendarActivity).
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        }
-        startActivity(intent)
-        // Opcional, para asegurar que Calendar no quede en la pila
-        finish()
-    }
-
-    /**
      * Lee users/{uid}, incrementa streakDays del hábito [habitIndex],
      * actualiza también el mapa streaks[title] y guarda en Firestore.
      */
@@ -139,8 +113,11 @@ class CalendarActivity : AppCompatActivity() {
         onUpdated: (Int) -> Unit,
         onError: () -> Unit
     ) {
-        val uid = userId
-        if (uid == null || habitIndex < 0) {
+        val uid = userId ?: run {
+            onError()
+            return
+        }
+        if (habitIndex < 0) {
             onError()
             return
         }
@@ -149,25 +126,32 @@ class CalendarActivity : AppCompatActivity() {
 
         userDocRef.get()
             .addOnSuccessListener { snapshot ->
-                val habitsList =
-                    snapshot.get("habits") as? List<Map<String, Any>> ?: emptyList()
-
-                if (habitIndex !in habitsList.indices) {
+                // Leer lista de hábitos de forma segura
+                val rawHabits = snapshot.get("habits") as? List<*> ?: emptyList<Any>()
+                if (habitIndex !in rawHabits.indices) {
                     onError()
                     return@addOnSuccessListener
                 }
 
                 // Convertir a lista mutable de mapas mutables
-                val mutableHabits = habitsList.map { it.toMutableMap() }.toMutableList()
+                val mutableHabits = rawHabits.mapNotNull { it as? Map<*, *> }
+                    .map { it.toMutableMap() as MutableMap<String, Any?> }
+                    .toMutableList()
+
                 val habitMap = mutableHabits[habitIndex]
 
-                val oldStreak = (habitMap["streakDays"] as? Long ?: 0L).toInt()
+                val oldStreak = (habitMap["streakDays"] as? Number)?.toInt() ?: 0
                 val newStreak = oldStreak + 1
                 habitMap["streakDays"] = newStreak
 
-                // Actualizar también el mapa streaks (clave = título del hábito)
-                val streaksMap = (snapshot.get("streaks") as? Map<String, Any>)
-                    ?.toMutableMap() ?: mutableMapOf()
+                // Actualizar también el mapa "streaks"
+                val rawStreaks = snapshot.get("streaks") as? Map<*, *>
+                val streaksMap = rawStreaks
+                    ?.mapNotNull { (k, v) ->
+                        (k as? String)?.let { key -> key to v }
+                    }
+                    ?.toMap()
+                    ?.toMutableMap() ?: mutableMapOf<String, Any?>()
 
                 val titleKey = habitMap["title"] as? String ?: habitTitle
                 streaksMap[titleKey] = newStreak
@@ -179,12 +163,8 @@ class CalendarActivity : AppCompatActivity() {
 
                 userDocRef
                     .set(dataToUpdate, SetOptions.merge())
-                    .addOnSuccessListener {
-                        onUpdated(newStreak)
-                    }
-                    .addOnFailureListener {
-                        onError()
-                    }
+                    .addOnSuccessListener { onUpdated(newStreak) }
+                    .addOnFailureListener { onError() }
             }
             .addOnFailureListener {
                 onError()

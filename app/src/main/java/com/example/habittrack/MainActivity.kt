@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
-    private var auth: FirebaseAuth = FirebaseAuth.getInstance() // Inicializa Firebase Authentication
+    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     // Campos de texto para capturar email y contraseña
     private lateinit var emailEditText: TextInputEditText
@@ -104,13 +104,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Navegar al Dashboard limpiando el back stack
+    // 🔁 Ir al Dashboard SIN eliminar MainActivity de la pila
     private fun goToDashboard() {
-        val intent = Intent(this, DashboardActivity::class.java).apply {
-            // Dejamos Dashboard como raíz de la tarea y limpiamos MainActivity
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
+        val intent = Intent(this, DashboardActivity::class.java)
         startActivity(intent)
+        // 👇 IMPORTANTE: ya NO llamamos a finish()
+        // De esta forma la pila queda: [MainActivity, DashboardActivity]
     }
 
     // Validación de datos
@@ -193,7 +192,6 @@ class MainActivity : AppCompatActivity() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Login exitoso", Toast.LENGTH_SHORT).show()
-                    // ⬇️ aquí usamos la nueva función
                     goToDashboard()
                 } else {
                     Toast.makeText(this, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
@@ -203,10 +201,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Limpiar campos solo cuando estés realmente en la pantalla de login
+        // Limpiar campos cuando vuelves a la pantalla de login
         emailEditText.setText("")
         passwordEditText.setText("")
     }
 }
-
 
