@@ -11,7 +11,7 @@
     android:background="?android:windowBackground"
     tools:context=".DashboardActivity">
 
-    <!-- HEADER: botón atrás + logo + título + switch dark mode -->
+    <!-- HEADER: botón atrás + logo + título -->
     <LinearLayout
         android:id="@+id/headerDashboard"
         android:layout_width="match_parent"
@@ -50,20 +50,11 @@
             android:textStyle="bold"
             android:textColor="?android:textColorPrimary" />
 
-        <!-- Espaciador -->
+        <!-- Espaciador para empujar a la izquierda -->
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1" />
-
-        <!-- Switch dark mode (dashboard) -->
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switchDarkModeDashboard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:thumbTint="@color/colorPrimary"
-            android:trackTint="@color/textSecondaryLight" />
     </LinearLayout>
 
     <!-- Texto bienvenida -->
@@ -182,7 +173,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Racha: 3 días"
+                        android:text="Racha: 0 días"
                         android:textColor="?android:textColorSecondary" />
                 </LinearLayout>
 
@@ -234,7 +225,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Racha: 7 días"
+                        android:text="Racha: 0 días"
                         android:textColor="?android:textColorSecondary" />
                 </LinearLayout>
 
@@ -286,7 +277,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Racha: 2 días"
+                        android:text="Racha: 0 días"
                         android:textColor="?android:textColorSecondary" />
                 </LinearLayout>
 
