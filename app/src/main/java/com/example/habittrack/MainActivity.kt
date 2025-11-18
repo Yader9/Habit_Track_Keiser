@@ -14,20 +14,16 @@ import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
-    private var auth : FirebaseAuth = FirebaseAuth.getInstance() // Inicializa Firebase Authentication
+    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    //Campos de texto para capturar email y contraseña
+    // Campos de texto para capturar email y contraseña
     private lateinit var emailEditText: TextInputEditText
     private lateinit var passwordEditText: TextInputEditText
 
     private lateinit var editTextNameSignup: TextInputEditText
-
     private lateinit var emailEditTextSignup: TextInputEditText
-
     private lateinit var passwordEditTextSignup: TextInputEditText
-
     private lateinit var confirmPasswordSignupEditText: TextInputEditText
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // 1) Aplicar el tema guardado ANTES de crear la UI
@@ -41,13 +37,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        emailEditText = findViewById<TextInputEditText>(R.id.editTextEmail)
-        passwordEditText = findViewById<TextInputEditText>(R.id.editTextPassword)
-        editTextNameSignup = findViewById<TextInputEditText>(R.id.editTextNameSignup)
-        emailEditTextSignup = findViewById<TextInputEditText>(R.id.editTextEmailSignup)
-        passwordEditTextSignup = findViewById<TextInputEditText>(R.id.editTextPasswordSignup)
-        confirmPasswordSignupEditText = findViewById<TextInputEditText>(R.id.editTextConfirmPasswordSignup)
-
+        emailEditText = findViewById(R.id.editTextEmail)
+        passwordEditText = findViewById(R.id.editTextPassword)
+        editTextNameSignup = findViewById(R.id.editTextNameSignup)
+        emailEditTextSignup = findViewById(R.id.editTextEmailSignup)
+        passwordEditTextSignup = findViewById(R.id.editTextPasswordSignup)
+        confirmPasswordSignupEditText = findViewById(R.id.editTextConfirmPasswordSignup)
 
         // ---------- Switch de modo oscuro ----------
         val switchDarkMode = findViewById<SwitchCompat>(R.id.switchDarkMode)
@@ -57,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             // Guardar preferencia
             prefs.edit().putBoolean("dark_mode", isChecked).apply()
 
-            // Aplicar el nuevo modo (recrea la actividad UNA sola vez)
+            // Aplicar el nuevo modo
             AppCompatDelegate.setDefaultNightMode(
                 if (isChecked) AppCompatDelegate.MODE_NIGHT_YES
                 else AppCompatDelegate.MODE_NIGHT_NO
@@ -80,7 +75,6 @@ class MainActivity : AppCompatActivity() {
                         loginFormLayout.visibility = View.VISIBLE
                         signupFormLayout.visibility = View.GONE
                     }
-
                     1 -> { // SIGN UP
                         loginFormLayout.visibility = View.GONE
                         signupFormLayout.visibility = View.VISIBLE
@@ -98,10 +92,9 @@ class MainActivity : AppCompatActivity() {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
             logIn(email, password)
-
         }
 
-        // Boton Sign Up || Llama a singUp y registra
+        // ---------- Botón Sign Up ----------
         val buttonSignup = findViewById<MaterialButton>(R.id.buttonSignup)
         buttonSignup.setOnClickListener {
             val email = emailEditTextSignup.text.toString().trim()
@@ -111,106 +104,106 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-        // Validacion de datos y confirmacion de contraseña || Boolean: indica si los datos cumplen las reglas
+    // 🔁 Ir al Dashboard SIN eliminar MainActivity de la pila
+    private fun goToDashboard() {
+        val intent = Intent(this, DashboardActivity::class.java)
+        startActivity(intent)
+        // 👇 IMPORTANTE: ya NO llamamos a finish()
+        // De esta forma la pila queda: [MainActivity, DashboardActivity]
+    }
 
-        private fun validate(email : String, password: String): Boolean {
+    // Validación de datos
+    private fun validate(email: String, password: String): Boolean {
 
-            if (email.isEmpty()){
-                Toast.makeText(this, "El correo no puede estar vacio", Toast.LENGTH_SHORT).show()
-                return false //Si un campo no cumple las condiciones
-            }
-
-            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-                Toast.makeText(this, "Formato de correo incorrecto", Toast.LENGTH_SHORT).show()
-                return false
-            }
-
-            if (password.isEmpty()) {
-                Toast.makeText(this, "La contraseña no puede estar vacia", Toast.LENGTH_SHORT).show()
-                return false
-            }
-
-            if (password.length < 6){
-                Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show()
-                return false
-            }
-
-            if (password.length > 20){
-                Toast.makeText(this, "La contraseña no puede superar los 20 caracteres", Toast.LENGTH_SHORT).show()
-                return false
-            }
-
-            return true //Si pasa las validacion
+        if (email.isEmpty()) {
+            Toast.makeText(this, "El correo no puede estar vacío", Toast.LENGTH_SHORT).show()
+            return false
         }
 
-        /*signUp= Llaman a validate y si cumple con los requisitos en signUp se registra el usuario
-          y cambia de tab a login para que el usuario inicie sesion
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Formato de correo incorrecto", Toast.LENGTH_SHORT).show()
+            return false
+        }
 
-          logIn= Llama a validacion y si cumple con los requisitos te redirige al siguiente dashboard
-         */
-        private fun signUp(email: String, password: String, confirmPassword: String){
-            val name = editTextNameSignup.text.toString().trim()
+        if (password.isEmpty()) {
+            Toast.makeText(this, "La contraseña no puede estar vacía", Toast.LENGTH_SHORT).show()
+            return false
+        }
 
-            if (name.isEmpty()) {
-                Toast.makeText(this, "El nombre es obligatorio para registrarse", Toast.LENGTH_SHORT).show()
-                return
-            }
+        if (password.length < 6) {
+            Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show()
+            return false
+        }
 
-            if (!validate(email, password)){
-                Toast.makeText(this, "Datos inválidos", Toast.LENGTH_SHORT).show()
-                return
-            }
+        if (password.length > 20) {
+            Toast.makeText(this, "La contraseña no puede superar los 20 caracteres", Toast.LENGTH_SHORT).show()
+            return false
+        }
 
-            if (password != confirmPassword) {
-                Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
-                return
-            }
+        return true
+    }
 
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Toast.makeText(this, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show()
-                        // Redirigir a Log in
-                        val tabLayout = findViewById<TabLayout>(R.id.tabLayoutAuth)
-                        tabLayout.getTabAt(0)?.select()
-                        //Limpieza de datos
-                        editTextNameSignup.setText("")
-                        emailEditTextSignup.setText("")
-                        passwordEditTextSignup.setText("")
-                        confirmPasswordSignupEditText.setText("")
+    private fun signUp(email: String, password: String, confirmPassword: String) {
+        val name = editTextNameSignup.text.toString().trim()
 
+        if (name.isEmpty()) {
+            Toast.makeText(this, "El nombre es obligatorio para registrarse", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-                    } else {
-                        Toast.makeText(this, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
-                    }
+        if (!validate(email, password)) {
+            Toast.makeText(this, "Datos inválidos", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (password != confirmPassword) {
+            Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show()
+
+                    // Redirigir a pestaña de Log in
+                    val tabLayout = findViewById<TabLayout>(R.id.tabLayoutAuth)
+                    tabLayout.getTabAt(0)?.select()
+
+                    // Limpieza de datos
+                    editTextNameSignup.setText("")
+                    emailEditTextSignup.setText("")
+                    passwordEditTextSignup.setText("")
+                    confirmPasswordSignupEditText.setText("")
+                } else {
+                    Toast.makeText(this, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                 }
-        }
-
-        private fun logIn(email: String, password: String){
-
-            if (!validate(email, password)){
-                Toast.makeText(this, "Datos inválidos", Toast.LENGTH_SHORT).show()
-                return
             }
+    }
 
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Toast.makeText(this, "Login exitoso", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, DashboardActivity::class.java)
-                        startActivity(intent)
-                    } else {
-                        Toast.makeText(this, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
-                    }
-                }
+    private fun logIn(email: String, password: String) {
 
+        if (!validate(email, password)) {
+            Toast.makeText(this, "Datos inválidos", Toast.LENGTH_SHORT).show()
+            return
         }
+
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Login exitoso", Toast.LENGTH_SHORT).show()
+                    goToDashboard()
+                } else {
+                    Toast.makeText(this, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+    }
 
     override fun onResume() {
         super.onResume()
+        // Limpiar campos cuando vuelves a la pantalla de login
         emailEditText.setText("")
         passwordEditText.setText("")
     }
-
-    }
+}
 
