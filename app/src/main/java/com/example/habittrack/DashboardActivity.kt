@@ -8,6 +8,7 @@ import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.button.MaterialButton
@@ -29,6 +30,7 @@ class DashboardActivity : AppCompatActivity() {
     )
 
     // Firestore y usuario actual
+    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private lateinit var db: FirebaseFirestore
     private var userId: String? = null
 
@@ -68,8 +70,17 @@ class DashboardActivity : AppCompatActivity() {
 
         val buttonAddHabit = findViewById<MaterialButton>(R.id.buttonAddHabit)
 
-        // --------- Botón de regreso ---------
+        // --------- Botón de sign out ---------
         findViewById<View>(R.id.buttonBack).setOnClickListener {
+            //Cerrar sesion de Firebase
+            auth.signOut()
+
+            Toast.makeText(this, "Sesion cerrada exitosamente", Toast.LENGTH_LONG).show()
+
+            //Volver al login
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK) //Se asegura que al volver al login no queden activities anteriores
+            startActivity(intent)
             finish()
         }
 

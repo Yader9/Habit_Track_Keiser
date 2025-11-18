@@ -1,5 +1,6 @@
 package com.example.habittrack
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.CalendarView
@@ -70,6 +71,8 @@ class CalendarActivity : AppCompatActivity() {
         // 🔙 Botón atrás: simplemente cerrar CalendarActivity
         // Esto devuelve a la Activity anterior en la pila (DashboardActivity)
         buttonBack.setOnClickListener {
+            val intent = Intent(this, DashboardActivity::class.java)
+            startActivity(intent)
             finish()
         }
 

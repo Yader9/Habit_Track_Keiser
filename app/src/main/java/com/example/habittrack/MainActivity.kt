@@ -198,12 +198,5 @@ class MainActivity : AppCompatActivity() {
                 }
             }
     }
-
-    override fun onResume() {
-        super.onResume()
-        // Limpiar campos cuando vuelves a la pantalla de login
-        emailEditText.setText("")
-        passwordEditText.setText("")
-    }
 }
 
